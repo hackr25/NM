@@ -1,0 +1,328 @@
+TRAPEZOIDAL
+
+def f(eq,x):
+    eq = eq.replace("x",str(x))
+    return float(eval(eq))
+def trap(lower,upper,iteration,eq):
+    h = float((upper - lower) / iteration)
+    result = f(eq,upper) + f(eq,lower)
+    for i in range(1, iteration):
+        x = lower + i * h(
+        result += 2 * f(eq,x)
+    return ((float(h) / 2) * (result))
+eq = input("Enter Equation: ")
+u = float(input("Enter upper limit: "))
+l = float(input("Enter lower limit: "))
+n = int(input("How Many iterations are required: "))
+result = trap(l,u,n,eq)
+print("Answer using Trapezoidal rule: ",result)
+
+
+SIMPSONS 1/3
+
+def f(eq,x):
+    eq = eq.replace("x",str(x))
+    return float(eval(eq))
+def sim(lower,upper,iteration,eq):
+    h = (float(upper - lower)/iteration)
+    sum = f(eq,upper) + f(eq,lower)
+    for i in range(1,iteration):
+        x = lower + i * h
+        if(i % 2 == 0):
+            sum +=2 * f(eq,x)
+        else:
+            sum += 4* f(eq,x)
+    return ((float (h) / 3) * sum)
+eq=input("enter a equation")
+u= float(input("Enter a upper limit:"))
+l= float(input("Enter a lower limit:"))
+n= int(input("how many iteration are required:"))
+result= sim(l,u,n,eq)
+print(result)
+
+
+SIMPSONS 3/8
+
+def f(eq,x):
+    eq = eq.replace("x",str(x))
+    return float(eval(eq))
+def sim(lower,upper,iteration,eq):
+    h = (float(upper - lower)/iteration)
+    sum = f(eq,upper) + f(eq,lower)
+    for i in range(1,iteration):
+        x = lower + i * h
+        if(i % 3 == 0):
+            sum +=2 * f(eq,x)
+        else:
+            sum += 3* f(eq,x)
+    return ((float (3*h) / 8) * sum)
+eq=input("enter a equation")
+u= float(input("Enter a upper limit:"))
+l= float(input("Enter a lower limit:"))
+n= int(input("how many iteration are required:"))
+result= sim(l,u,n,eq)
+print(result)
+
+
+RK-2
+
+from math import*
+def rk_2(f,x0,y0,h,n):
+    x_values = [x0]
+    y_values = [y0]
+    for i in range(1 , n+1):
+        k1 = h*f(x_values[i-1],y_values[i-1])
+        k2 = h*f(x_values[i-1] + h,y_values[i-1]+k1)
+        y_new = y_values[i-1]+0.5*(k1+k2)
+        x_new = x_values[i-1]+h
+        x_values.append(x_new)
+        y_values.append(y_new)
+    return x_values,y_values
+equation_input = input("Enter the differential equation in terms of x: ")
+equation = lambda x,y:eval(equation_input)
+
+x0 = float(input("Enter initial x value: "))
+y0 = float(input("Enter initial y value: "))
+h = float(input("Enter step size(h): "))
+n = int(input("Enter number of iterations: "))
+x_values,y_values = rk_2(equation,x0,y0,h,n)
+print("\nResults: ")
+for i in range(len(x_values)):
+    print(f"Iteration {i+1}: x = {x_values[i]},y = {y_values[i]}")
+    
+
+RK-4
+
+from math import*
+def rk_4(f,x0,y0,h,n):
+    x_values = [x0]
+    y_values = [y0]
+    for i in range(1 , n+1):
+        k1 = h*f(x_values[i-1],y_values[i-1])
+        k2 = h*f(x_values[i-1] + h/2,y_values[i-1]+k1/2)
+        k3 = h*f(x_values[i-1] + h/2,y_values[i-1]+k2/2)
+        k4 = h*f(x_values[i-1] + h,y_values[i-1]+k3)
+        y_new = y_values[i-1]+1/6*(k1+2*k2+2*k3+k4)
+        x_new = x_values[i-1]+h
+        x_values.append(x_new)
+        y_values.append(y_new)
+    return x_values,y_values
+equation_input = input("Enter the differential equation in terms of x: ")
+equation = lambda x,y:eval(equation_input)
+x0 = float(input("Enter initial x value: "))
+y0 = float(input("Enter initial y value: "))
+h = float(input("Enter step size(h): "))
+n = int(input("Enter number of iterations: "))
+x_values,y_values = rk_4(equation,x0,y0,h,n)
+print("\nResults: ")
+for i in range(len(x_values)):
+    print(f"Iteration {i+1}: x = {x_values[i]},y = {y_values[i]}")
+    
+
+EULERS
+
+def euler_method(f,x0,y0,xn,h):
+    x_values=[x0]
+    y_values=[y0]
+    n=int((xn-x0)/h)
+    for i in range(1,n+1):
+        x_new=x0+i*h
+        y_new=y_values[-1] + h*f(x_values[-1],y_values[-1])
+        x_values.append(round(x_new,4))
+        y_values.append(round(y_new,4))
+        return x_values,y_values
+equation_input=input("Enter the differential equation in terms of x and y")
+f=lambda x,y:eval(equation_input)
+x0=float(input("Enter initial x value[x0]:"))
+y0=float(input("Enter initial y value[y0]:"))
+xn=float(input("Enter final x value[xn]:"))
+h=float(input("Enter step size:"))
+x_values,y_values=euler_method(f,x0,y0,xn,h)
+print("\nResults:")
+for i in range(len(x_values)):
+    print(f"Iterations {i +1}: x={x_values[i]},y ={y_values[i]}")
+
+
+BISECTION
+
+from sympy import sympify
+def bisection(f,a,b,iterations):
+    f=sympify(f)
+    var,=f.free_symbols
+    fa=f.subs(var,a)
+    fb=f.subs(var,b)
+    if fa*fb>= 0:
+        raise ValueError(f'The root does not lie in the open interval')
+    print(f'itr | a | b | {var}')
+    for i in range(1,iterations+1):
+        x = (a+b) / 2
+        fx= f.subs(var,x)
+        print(f'{i:02} | {a:.8f} | {b:.8f} | {x:.8f}')
+        if fx==0:
+            print('Root found: further iterations not possible')
+            break
+        elif fx*fa<0:
+            b=x
+            fb=fx
+        else:
+            a=x
+            fa=fx
+        return x
+if __name__=='__main__':
+    f=input('Enter the function:')
+    a=float(input('Enter the lower limit:'))
+    b=float(input('Enter the upper limit:'))
+    iter= int(input('Enter the no.of iterations: '))
+    print(bisection(f,a,b,iter))
+
+
+REGULAR FALSI
+
+from sympy import sympify
+def bisection(f,a,b,iterations):
+    f=sympify(f)
+    var,=f.free_symbols
+    fa=f.subs(var,a)
+    fb=f.subs(var,b)
+    if fa*fb>= 0:
+        raise ValueError(f'The root does not lie in the open interval')
+    print(f'itr | a | b | {var}')
+    for i in range(1,iterations+1):
+        x = float((a*fb-b*fa)/(fb-fa))
+        fx= f.subs(var,x)
+        print(f'{i:02} | {a:.8f} | {b:.8f} | {x:.8f}')
+        if fx==0:
+            print('Root found: further iterations not possible')
+            break
+        elif fx*fa>0:
+            b=x
+            fb=fx
+        else:
+            a=x
+            fa=fx
+        return x
+if __name__=='__main__':
+    f=input('Enter the function:')
+    a=float(input('Enter the lower limit:'))
+    b=float(input('Enter the upper limit:'))
+    print(bisection(f,a,b,iter))
+
+                    
+NEWTON RAPHSON
+
+SECANT
+def sm(fun,x0,x1,n):
+    def f(x):
+        f = eval(fun)
+        return f
+
+    for intercept in range(1,n):
+        fx0 = f(x0)
+        fx1 = f(x1)
+
+        xi = x0-(fx0/((fx0-fx1)/(x0-x1)))
+
+        x0 = x1
+        x1 = xi
+
+    print(f"The Root was found to be at {xi} after {n} iterations")
+
+fun = input("Enter The Equation: ")
+x0 = float(input("Enter the First Guess: "))
+x1 = float(input("Enter the Second Guess: "))
+n = int(input("Enter the Number of iterations"))
+sm(fun,x0,x1,n)
+
+
+GAUSS SEIDEL
+
+def gauss_seidel(mat, iterations, initial_vec=None):
+    f = [ ]
+    for i, row in enumerate(mat):
+        var = -row.pop(i)
+        row[- 1] *= -1
+        eq = [elem/var for elem in row]
+        f.append(eq)
+    x = [0]*len(f) if initial_vec is None else initial_vec
+    for k in range(iterations):
+        for i in range(len(f)):
+            rest = x+[1]
+            rest.pop(i)
+            x[i] = sum(coeff*var for coeff, var in zip(f[i], rest))
+        print(k+1, x)
+    return x
+if __name__=='__main__':
+    M = [[20,1,-2,17],[3,20,-1,-18],[2,-3,20,25]]
+    print('Matrix M:\n', M)
+    itr = int(input('Enter the number of iterations: '))
+    print('Solution M:', gauss_seidel(M,itr))
+
+GAUSS JACOBI
+
+def jacobi(mat, iterations, initial_vec=None):
+    f = [ ]
+    for i, row in enumerate(mat):
+        var = row.pop(i)
+        row[- 1] *= -1
+        eq = [elem/-var for elem in row]
+        f.append(eq)
+    x = [0]*len(f) if initial_vec is None else initial_vec
+    for k in range(iterations):
+        xi=[ ]
+        for i in range(len(f)):
+            rest=x+[1]
+            rest.pop(i)
+            approx=sum(coeff*var for coeff,var in zip(f[i],rest))
+            xi.append(approx)
+        print(k+1,xi)
+        x=xi
+    return xi
+if __name__=='__main__':
+    M=[[20,1,-2,17],[3,20,-1,-18],[2,-3,20,25]]
+    print(M)
+    itr = int(input("Enter the number of iterations:"))
+    print("Solution M",jacobi(M,itr))
+
+LAGRANGE
+
+from math import prod
+def lag(x,X,Y):
+  fx=0
+  for i in range(len(X)):
+    num = prod(x-X[j]for j in range(len(X)) if j!=i)
+    denom = prod(X[i]-X[j] for j in range(len(X)) if j!=i)
+    fx+=Y[i]*num/denom
+  return fx
+if __name__=="__main__":
+    x=float(input("Enter the value of x:"))
+    X=list(map(float ,input("Enter  the value of X(comma-seprated:").split(',')))
+    Y=list(map(float ,input("Enter  the value of Y(comma-seprated:").split(',')))
+    print("Interpolated value:",lag(x,X,Y))
+
+F_NEWTON
+
+from math import factorial
+def fnew(x,X,Y):
+   h=X[1]-X[0]
+   u=(x-X[0])/h
+   fx=Y[0]
+   perm=1
+   for i in range(len(X)-1):
+       dy=[]
+       for j in range(len(Y)-1):
+           dy.append(Y[j+i]-Y[j])
+        perm*=(u-i)
+        fx+=(perm*dy[0])/factorial(i+1)
+        y=dy
+   return fx
+if __name__=="__main__":
+   x=float(input("Enter the value of x:"))
+    X=list(map(float ,input("Enter  the value of X(comma-seprated:").split(',')))
+    Y=list(map(float ,input("Enter  the value of Y(comma-seprated:").split(',')))
+    print("Interpolated value:",fnew(x,X,Y))
+        
+B_NEWTON
+
+TAYLOR
+
+PICARDS
